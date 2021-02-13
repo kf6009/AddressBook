@@ -1,0 +1,175 @@
+%% Dr Alun Moon
+%% assignment-template.tex, generated from assignment-template.dtx
+\documentclass[12pt]{article}
+\usepackage[british]{babel}
+
+\usepackage{url}
+\usepackage[round]{natbib}
+\usepackage{infoboxes}
+
+\usepackage{latexsym}
+\usepackage{tlatex}
+\usepackage{color}
+\definecolor{boxshade}{gray}{.8}
+\setboolean{shading}{true}
+
+\usepackage{enumerate,
+            siunitx}
+
+\begin{document}
+
+\section{{Specification}}
+\subsection{The Specification} 
+\begin{tla}
+---------------------------- MODULE addressbook ----------------------------
+CONSTANTS Names, Emails
+VARIABLE address
+
+Invariant == address \in [Names -> Emails ]
+
+Init == address = <<>> \* A different ideom for an empty function...
+
+Add(name,email) == 
+    address' = [n \in DOMAIN address \union {name} |->
+                         IF n \in DOMAIN address 
+                         THEN address[n]
+                         ELSE email
+               ]
+
+Remove(name) == 
+    address' = [ n \in DOMAIN address \ {name} |-> address[n] ]
+
+Find(name) ==  
+    /\ name \in DOMAIN address
+    /\ UNCHANGED address
+
+Next == 
+    \E n \in Names , e \in Emails : 
+        \/ Add(n,e)
+        \/ Remove(n)
+        \/ Find(n)
+
+=============================================================================
+\* Modification History
+\* Last modified Sat Feb 13 10:50:44 GMT 2021 by alunm
+\* Created Wed Feb 10 21:49:46 GMT 2021 by alunm
+\end{tla}
+\begin{tlatex}
+\@x{}\moduleLeftDash\@xx{ {\MODULE} addressbook}\moduleRightDash\@xx{}%
+\@x{ {\CONSTANTS} Names ,\, Emails}%
+\@x{ {\VARIABLE} address}%
+\@pvspace{8.0pt}%
+\@x{ Invariant \.{\defeq} address \.{\in} [ Names \.{\rightarrow} Emails ]}%
+\@pvspace{8.0pt}%
+\@x{ Init \.{\defeq} address \.{=} {\langle} {\rangle}}%
+\@y{%
+  A different ideom for an empty function...
+}%
+\@xx{}%
+\@pvspace{8.0pt}%
+\@x{ Add ( name ,\, email ) \.{\defeq}}%
+ \@x{\@s{25.93} address \.{'} \.{=} [ n \.{\in} {\DOMAIN} address \.{\cup} \{
+ name \} \.{\mapsto}}%
+\@x{\@s{121.75} {\IF} n \.{\in} {\DOMAIN} address}%
+\@x{\@s{121.75} \.{\THEN} address [ n ]}%
+\@x{\@s{121.75} \.{\ELSE} email}%
+\@x{\@s{82.88} ]}%
+\@pvspace{8.0pt}%
+\@x{ Remove ( name ) \.{\defeq}}%
+ \@x{\@s{16.4} address \.{'} \.{=} [ n \.{\in} {\DOMAIN} address
+ \.{\,\backslash\,} \{ name \} \.{\mapsto} address [ n ] ]}%
+\@pvspace{8.0pt}%
+\@x{ Find ( name ) \.{\defeq}}%
+\@x{\@s{25.10} \.{\land} name \.{\in} {\DOMAIN} address}%
+\@x{\@s{25.10} \.{\land} {\UNCHANGED} address}%
+\@pvspace{8.0pt}%
+\@x{ Next \.{\defeq}}%
+\@x{\@s{16.4} \E\, n \.{\in} Names ,\, e \.{\in} Emails \.{:}}%
+\@x{\@s{29.16} \.{\lor} Add ( n ,\, e )}%
+\@x{\@s{29.16} \.{\lor} Remove ( n )}%
+\@x{\@s{29.16} \.{\lor} Find ( n )}%
+\@pvspace{8.0pt}%
+\@x{}\bottombar\@xx{}%
+\@x{}%
+\@y{%
+  Modification History
+}%
+\@xx{}%
+\@x{}%
+\@y{%
+  Last modified Sat Feb 13 10:50:44 GMT 2021 by alunm
+}%
+\@xx{}%
+\@x{}%
+\@y{%
+  Created Wed Feb 10 21:49:46 GMT 2021 by alunm
+}%
+\@xx{}%
+\end{tlatex}
+
+\section{The Model}
+
+\subsection{Model Overview}
+\paragraph{The Behaviour specification} is an \emph{Initial-predicate and
+next-state relation} 
+\begin{description}
+	\item[Initial Predicate] \textit{Init}
+	\item[Next-state relation] \textit{Next}
+\end{description}
+\paragraph{The Model} values assigned to declared constants
+\begin{description}
+	\item[Set of Names] is set to
+\begin{tla}
+Names <- { "a", "b" }
+\end{tla}
+\begin{tlatex}
+\@x{ Names \.{\leftarrow} \{\@w{a} ,\,\@w{b} \}}%
+\end{tlatex}
+\item[Set of email addresses] is set to
+\begin{tla}
+Emails <- {"1","2"}
+\end{tla}
+\end{description}
+
+\subsection{Checks and verifications}
+\paragraph{Invariants} Two invariants are checked
+
+\subsection{Results} A summary of the results
+\paragraph{Statistics} a summaries of the actions and number of states
+found.
+
+\begin{table}[h]
+\begin{tabular}{lr}
+	States found & \num{} \\
+ Distinct states & \num{} \\ 
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\begin{tabular}{llrr}
+	\textbf{Action} & Location & States Found & \textbf{Distinct states} \\
+	\hline
+	\textit{Init}   & Line & 1 & 1 \\
+\end{tabular}
+\end{table}
+
+\subsection{Discussion}
+\subsubsection{Model description} 
+\paragraph{The state of the system is .}
+
+\subparagraph{The initial conditions} 
+
+\subparagraph{The type invariant} 
+
+\subparagraph{The safety invariant} 
+
+\paragraph{The Next relation} 
+
+\subsubsection{Interpretation of results}
+
+
+\end{document}
+
+\endinput
+%%
+%% End of file `assignment-template.tex'.
