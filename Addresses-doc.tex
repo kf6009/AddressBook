@@ -187,6 +187,143 @@ The number of distict states found for the \textit{Remove} operation is
 initially surprising, however it is correct, the state of the system after an
 entry has been removed is the same as the state before the entry was added.
 
+\clearpage
+
+\section{Address book --- v2}
+\subsection{The Specification} 
+\begin{tla}
+---------------------------- MODULE addressbook ----------------------------
+CONSTANTS Names, Emails
+VARIABLE address
+
+Invariant == address \in SUBSET [name:Names, email:Emails ]
+
+Init == address = {}
+
+Find(name) ==  
+     \E a \in address : a.name = name
+
+
+Add(name,email) == 
+    /\ \lnot Find(name)  \* not in address book
+    /\ address' = address \union { [name|-> name, email|->email] }
+
+Remove(name) == 
+    /\ Find(name)
+    /\ address' = address \ {CHOOSE a \in address : a.name = name }
+
+Next == 
+    \E n \in Names , e \in Emails : 
+        \/ Add(n,e)
+        \/ Remove(n)
+        \/ Find(n)/\UNCHANGED address
+
+=============================================================================
+\* Modification History
+\* Last modified Sat Feb 13 11:31:50 GMT 2021 by alunm
+\* Created Wed Feb 10 21:49:46 GMT 2021 by alunm
+\end{tla}
+\begin{tlatex}
+\@x{}\moduleLeftDash\@xx{ {\MODULE} addressbook}\moduleRightDash\@xx{}%
+\@x{ {\CONSTANTS} Names ,\, Emails}%
+\@x{ {\VARIABLE} address}%
+\@pvspace{8.0pt}%
+ \@x{ Invariant \.{\defeq} address \.{\in} {\SUBSET} [ name \.{:} Names ,\,
+ email \.{:} Emails ]}%
+\@pvspace{8.0pt}%
+\@x{ Init \.{\defeq} address \.{=} \{ \}}%
+\@pvspace{8.0pt}%
+\@x{ Find ( name ) \.{\defeq}}%
+\@x{\@s{29.67} \E\, a \.{\in} address \.{:} a . name \.{=} name}%
+\@pvspace{16.0pt}%
+\@x{ Add ( name ,\, email ) \.{\defeq}}%
+\@x{\@s{25.93} \.{\land} {\lnot} Find ( name )\@s{4.1}}%
+\@y{%
+  not in address book
+}%
+\@xx{}%
+ \@x{\@s{25.93} \.{\land} address \.{'} \.{=} address \.{\cup} \{ [ name
+ \.{\mapsto} name ,\, email \.{\mapsto} email ] \}}%
+\@pvspace{8.0pt}%
+\@x{ Remove ( name ) \.{\defeq}}%
+\@x{\@s{16.4} \.{\land} Find ( name )}%
+ \@x{\@s{16.4} \.{\land} address \.{'} \.{=} address \.{\,\backslash\,} \{
+ {\CHOOSE} a \.{\in} address \.{:} a . name \.{=} name \}}%
+\@pvspace{8.0pt}%
+\@x{ Next \.{\defeq}}%
+\@x{\@s{16.4} \E\, n \.{\in} Names ,\, e \.{\in} Emails \.{:}}%
+\@x{\@s{29.16} \.{\lor} Add ( n ,\, e )}%
+\@x{\@s{29.16} \.{\lor} Remove ( n )}%
+\@x{\@s{29.16} \.{\lor} Find ( n ) \.{\land} {\UNCHANGED} address}%
+\@pvspace{8.0pt}%
+\@x{}\bottombar\@xx{}%
+\@x{}%
+\@y{%
+  Modification History
+}%
+\@xx{}%
+\@x{}%
+\@y{%
+  Last modified Sat Feb 13 11:31:50 GMT 2021 by alunm
+}%
+\@xx{}%
+\@x{}%
+\@y{%
+  Created Wed Feb 10 21:49:46 GMT 2021 by alunm
+}%
+\@xx{}%
+\end{tlatex}
+
+\section{The Model}
+
+
+\subsection{Model Overview}
+The same model was used as for version 1
+
+\subsection{Checks and verifications}
+\paragraph{Invariants} We now have an invariant that can be checked.
+\textit{Invariant}
+
+\subsection{Results} A summary of the results
+\paragraph{Statistics} a summaries of the actions and number of states
+found.
+
+\begin{table}[h]
+\begin{tabular}{lr}
+	States found & \num{61} \\
+ Distinct states & \num{9} \\ 
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\begin{tabular}{llrr}
+	\textbf{Action} & Location & States Found & \textbf{Distinct states} \\
+	\hline
+	\textit{Init}   & Line 7 & 1 & 1 \\
+	\textit{Add}    & Line 13 & 12 & 8 \\
+	\textit{Remove} & Line 17 & 24 & 0 \\
+	\textit{Next}   & Line 25 & 24 & 0 \\
+\end{tabular}
+\end{table}
+
+\subsection{Discussion}
+\subsubsection{Model description} 
+\paragraph{The state of the system is .} now modelled as a set of records,
+which an reflection seems a good description of a database.
+The initial conditions are now just a simple empty set.
+The invariant is now a subset of all possible records.
+
+The Find operation is only marginally more complex.  The operation has to be a
+predicate to count as an action that can be performed.  It tests \emph{if} an
+entry is found in the set.  It is also useful as a guard condition on the add
+and remove operations.
+
+\begin{infobox}{\info}
+This illustrates how there are more than one way of specifying a system.  But
+as how both can satisfy the model and requirements \emph{both} are correct
+specifications.
+\end{infobox}
+
 \end{document}
 
 \endinput
